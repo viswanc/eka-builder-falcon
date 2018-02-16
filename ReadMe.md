@@ -10,3 +10,4 @@ Log
 
   * 0600  Extracted out the builder, as a plugin.
   * 0604  Added the license.
+  * 2307  Adopted the changes in the upstream build process, by implementing a custom build process.
