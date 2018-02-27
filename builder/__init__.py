@@ -20,19 +20,11 @@ class Falcon(RestServer):
     RestServer.__init__(self, Structure, Scopes)
 
   def build(self):
-    from os import mkdir
     from os.path import dirname
-
     from eka.classes.builders.jinja import jinjaBuilder
-    from eka.helpers import createTempDir, readFile, writeFile
 
-    buildTgt = createTempDir()
+    Structure = self.Structure
+    buildTgt = Structure['buildBase']
     buildSrc = dirname(__file__)
 
-    from shutil import copytree
-    copytree('%s/res' % buildSrc, '%s/res' % buildTgt)
-    mkdir('%s/src' % buildTgt)
-
-    writeFile('%s/src/main.py' % buildTgt, jinjaBuilder().build(readFile('%s/main.jinja' % buildSrc), self.Structure))
-
-    return buildTgt
+    return jinjaBuilder().build(buildSrc, buildTgt, Structure)
