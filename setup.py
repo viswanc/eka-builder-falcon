@@ -1,4 +1,4 @@
-from eka.utils.plugins import setupBuilder
+from eka.utils.plugins import setup
 
 import builder
-setupBuilder(builder)
+setup(builder)
