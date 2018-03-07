@@ -16,3 +16,7 @@ Log
 
   * 1430  Streamlined with the upstream changes.
   * 2115  Moved the build logic to the underlying builder.
+
+* 180307
+
+  * 1412  Renamed the package to support pip installations.

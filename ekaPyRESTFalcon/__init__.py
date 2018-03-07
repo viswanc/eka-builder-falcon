@@ -11,13 +11,13 @@ __version__ = '0.0.1'
 
 # Imports
 from eka.plugins import define, getPluginClass
-RestServer = getPluginClass('rest.server')
+CrudApp = getPluginClass('crud.app')
 
 # Plugin
 @define(__plugin_name__)
-class Falcon(RestServer):
+class Falcon(CrudApp):
   def __init__(self, Structure, Scopes):
-    RestServer.__init__(self, Structure, Scopes)
+    CrudApp.__init__(self, Structure, Scopes)
 
   def build(self):
     from os.path import dirname
@@ -25,6 +25,6 @@ class Falcon(RestServer):
 
     Structure = self.Structure
     buildTgt = Structure['buildBase']
-    buildSrc = dirname(__file__)
+    buildSrc = '%s/res' % dirname(__file__)
 
     return jinjaBuilder().build(buildSrc, buildTgt, Structure)
