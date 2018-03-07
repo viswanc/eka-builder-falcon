@@ -2,3 +2,5 @@
 
 cd "$(dirname $0)"
 pip install -r requirements.txt
+
+sh server/src/crud/setup.sh

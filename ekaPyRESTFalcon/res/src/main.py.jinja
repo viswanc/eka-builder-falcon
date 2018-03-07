@@ -1,9 +1,28 @@
 import falcon
+import crud
+
 api = falcon.API()
-{% for name, prop in props.iteritems() %}
+{% for name, prop in props.iteritems() if prop.permissions != '' -%}
 class {{ name }}:
+  {% if 'r' in prop.permissions %}
   def on_get(self, req, resp):
-    resp.media = '{{ name }}'
+    resp.media = crud.{{ name }}.get(req.id)
+  {% endif -%}
+
+  {% if 'c' in prop.permissions %}
+  def on_post(self, req, resp):
+    resp.media = crud.{{ name }}.create(req)
+  {% endif -%}
+
+  {% if 'u' in prop.permissions %}
+  def on_put(self, req, resp):
+    resp.media = crud.{{ name }}.update(req.id, req)
+  {% endif -%}
+
+  {% if 'd' in prop.permissions %}
+  def on_delete(self, req, resp):
+    resp.media = crud.{{ name }}.delete(req.id)
+  {% endif -%}
 
 api.add_route('/{{ name }}', {{ name }}())
 {% endfor %}

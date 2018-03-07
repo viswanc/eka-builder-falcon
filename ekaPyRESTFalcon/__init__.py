@@ -13,6 +13,9 @@ __version__ = '0.0.1'
 from eka.plugins import define, getPluginClass
 CrudApp = getPluginClass('crud.app')
 
+# Data
+builderClass = 'python.crud.app'
+
 # Plugin
 @define(__plugin_name__)
 class Falcon(CrudApp):
@@ -26,5 +29,11 @@ class Falcon(CrudApp):
     Structure = self.Structure
     buildTgt = Structure['buildBase']
     buildSrc = '%s/res' % dirname(__file__)
+    builtPath = jinjaBuilder().build(buildSrc, buildTgt, Structure)
 
-    return jinjaBuilder().build(buildSrc, buildTgt, Structure)
+    # Build the CRUD App
+    Structure['buildBase'] = '%s/src/crud' % builtPath
+    getPluginClass(builderClass)(self.Structure, self.Scopes).build()
+    Structure['buildBase'] = buildTgt
+
+    return builtPath
