@@ -2,27 +2,28 @@ import falcon
 import crud
 
 api = falcon.API()
+api.req_options.auto_parse_form_urlencoded = True # #Note: Allow accessing params as a dictionary.
+
 {% for name, prop in props.iteritems() if prop.permissions != '' -%}
 class {{ name }}:
-  {% if 'r' in prop.permissions %}
+  {%- if 'r' in prop.permissions %}
   def on_get(self, req, resp):
-    resp.media = crud.{{ name }}.get(req.id)
-  {% endif -%}
+    resp.media = crud.{{ name }}.read(req.params['id'])
+  {% endif %}
 
-  {% if 'c' in prop.permissions %}
+  {%- if 'c' in prop.permissions %}
   def on_post(self, req, resp):
-    resp.media = crud.{{ name }}.create(req)
-  {% endif -%}
+    resp.media = crud.{{ name }}.create(req.params)
+  {% endif %}
 
-  {% if 'u' in prop.permissions %}
+  {%- if 'u' in prop.permissions %}
   def on_put(self, req, resp):
-    resp.media = crud.{{ name }}.update(req.id, req)
-  {% endif -%}
+    crud.{{ name }}.update(req.params)
+  {% endif %}
 
-  {% if 'd' in prop.permissions %}
+  {%- if 'd' in prop.permissions %}
   def on_delete(self, req, resp):
-    resp.media = crud.{{ name }}.delete(req.id)
-  {% endif -%}
-
+    crud.{{ name }}.delete(req.params['id'])
+  {% endif %}
 api.add_route('/{{ name }}', {{ name }}())
 {% endfor %}
